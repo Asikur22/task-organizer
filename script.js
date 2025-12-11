@@ -17,10 +17,10 @@ class TaskManager {
     }
 
     initDatePicker() {
-        flatpickr(this.taskDateInput, {
+        this.mainDatePicker = flatpickr(this.taskDateInput, {
             altInput: true,
             altFormat: "F j, Y",
-            dateFormat: "Y-m-d"
+            dateFormat: "d-m-Y"
         });
     }
 
@@ -79,13 +79,16 @@ class TaskManager {
             createdAt: new Date().toISOString()
         };
 
-        this.tasks.push(task);
+        // Add to beginning of array
+        this.tasks.unshift(task);
         this.saveTasks();
         this.renderTasks();
 
         // Clear form
         this.taskNameInput.value = '';
-        this.taskDateInput.value = '';
+        if (this.mainDatePicker) {
+            this.mainDatePicker.clear();
+        }
         this.taskNameInput.focus();
     }
 
@@ -162,22 +165,53 @@ class TaskManager {
 
         taskContent.appendChild(taskText);
 
+        const dateDisplay = document.createElement('span');
+        dateDisplay.className = 'task-date';
         if (task.date) {
-            const taskDate = document.createElement('span');
-            taskDate.className = 'task-date';
-            taskDate.textContent = `Due: ${new Date(task.date).toLocaleDateString()}`;
-            taskContent.appendChild(taskDate);
+            // Display date as stored (day, month, year)
+            dateDisplay.textContent = `Due: ${task.date}`;
         }
+        taskContent.appendChild(dateDisplay);
+
+        const actionsDiv = document.createElement('div');
+        actionsDiv.className = 'task-actions';
+
+        const dateBtn = document.createElement('button');
+        dateBtn.className = 'edit-date-btn';
+        dateBtn.innerHTML = '📅'; // Calendar icon
+        dateBtn.title = 'Set Due Date';
+        
+        // Initialize flatpickr on the button
+        flatpickr(dateBtn, {
+            defaultDate: task.date || null,
+            dateFormat: "d-m-Y",
+            onChange: (selectedDates, dateStr) => {
+                this.updateTaskDate(task.id, dateStr);
+            },
+            position: "auto right"
+        });
 
         const deleteButton = document.createElement('button');
         deleteButton.className = 'delete-btn';
         deleteButton.textContent = 'Delete';
         deleteButton.addEventListener('click', () => this.deleteTask(task.id));
 
+        actionsDiv.appendChild(dateBtn);
+        actionsDiv.appendChild(deleteButton);
+
         taskElement.appendChild(taskContent);
-        taskElement.appendChild(deleteButton);
+        taskElement.appendChild(actionsDiv);
 
         return taskElement;
+    }
+
+    updateTaskDate(taskId, newDate) {
+        const taskIndex = this.tasks.findIndex(t => t.id === taskId);
+        if (taskIndex !== -1) {
+            this.tasks[taskIndex].date = newDate;
+            this.saveTasks();
+            this.renderTasks();
+        }
     }
 
 

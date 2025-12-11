@@ -190,6 +190,29 @@ main {
     font-style: italic;
 }
 
+.task-actions {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+.edit-date-btn {
+    background-color: transparent;
+    border: 1px solid var(--secondary-color);
+    color: var(--secondary-color);
+    padding: 0.5rem;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    transition: var(--transition);
+    font-size: 1.2rem;
+    line-height: 1;
+}
+
+.edit-date-btn:hover {
+    background-color: #e9ecef;
+    color: var(--dark-color);
+}
+
 .delete-btn {
     background-color: var(--danger-color);
     color: white;
