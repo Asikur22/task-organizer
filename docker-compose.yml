@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   task-organizer:
     container_name: task-organizer
