@@ -1,0 +1,10 @@
+version: '3.8'
+
+services:
+  task-organizer:
+    build: .
+    ports:
+      - "8995:80"
+    volumes:
+      - ./:/usr/share/nginx/html
+    restart: unless-stopped

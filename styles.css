@@ -1,0 +1,274 @@
+:root {
+    --primary-color: #4a6cf7;
+    --secondary-color: #6c757d;
+    --success-color: #28a745;
+    --danger-color: #dc3545;
+    --light-color: #f8f9fa;
+    --dark-color: #212529;
+    --border-radius: 8px;
+    --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    --transition: all 0.3s ease;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
+    color: var(--dark-color);
+    background-color: #f5f7ff;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 30px 20px;
+    width: 100%;
+}
+
+header {
+    background: linear-gradient(135deg, var(--primary-color), #667eea);
+    color: white;
+    padding: 0;
+    box-shadow: var(--box-shadow);
+}
+
+header h1 {
+    font-size: 2rem;
+    margin-bottom: 0.3rem;
+}
+
+header p {
+    opacity: 0.9;
+    font-size: 1rem;
+}
+
+main {
+    flex: 1;
+    padding: 3rem 0; /* Adjusted padding */
+    margin-top: 2rem; /* added space between header and content */
+}
+
+.task-form, .task-list {
+    background: white;
+    border-radius: var(--border-radius);
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    box-shadow: var(--box-shadow);
+    width: 100%;
+}
+
+.task-form h2, .task-list h2 {
+    color: var(--primary-color);
+    margin-bottom: 1rem;
+    border-bottom: 2px solid #eee;
+    padding-bottom: 0.5rem;
+}
+
+.form-group {
+    margin-bottom: 0; /* Remove default bottom margin for flex context */
+}
+
+.form-group label {
+    display: none; /* Hide labels for compact form */
+}
+
+.form-group input {
+    padding: 0.5rem 0.8rem;
+    border: 1px solid #ddd;
+    border-radius: var(--border-radius);
+    font-size: 0.95rem;
+    transition: var(--transition);
+    width: 100%; /* Ensure input fills its container */
+    height: 42px; /* Consistent height */
+}
+
+.form-group input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(74, 108, 247, 0.1);
+}
+
+/* Ensure form takes full width of container */
+.task-form form {
+    display: flex;
+    flex-wrap: nowrap; /* Prevent wrapping on desktop */
+    align-items: center;
+    gap: 1rem; /* Better gap */
+    width: 100%;
+}
+
+/* Task Name Group - Flexible width */
+.task-form .form-group:first-child {
+    flex-grow: 1;
+    flex-shrink: 1;
+    min-width: 0; /* Allow shrinking below content size */
+}
+
+/* Date Group - Fixed width if needed, or auto */
+.task-form .form-group:nth-child(2) {
+    flex-basis: 200px;
+    flex-shrink: 0;
+}
+
+#taskName {
+    width: 100%;
+}
+
+/* Make date input fixed width */
+#taskDate {
+    width: 100%;
+}
+
+.btn {
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 0.6rem 1.2rem;
+    border-radius: var(--border-radius);
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition);
+    display: inline-block;
+}
+
+.btn:hover {
+    background-color: #3a5ce4;
+    transform: translateY(-1px);
+    box-shadow: var(--box-shadow);
+}
+
+.task-container {
+    min-height: 200px;
+}
+
+.task-item {
+    background: var(--light-color);
+    border: 1px solid #e9ecef;
+    border-radius: var(--border-radius);
+    padding: 1rem;
+    margin-bottom: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: var(--transition);
+    cursor: move;
+}
+
+.task-item:hover {
+    box-shadow: var(--box-shadow);
+    transform: translateY(-2px);
+}
+
+.task-item.dragging {
+    opacity: 0.5;
+}
+
+.task-content {
+    display: flex;
+    align-items: center;
+    flex: 1;
+}
+
+.task-text {
+    font-size: 1.1rem;
+    font-weight: 500;
+}
+
+.task-date {
+    color: var(--secondary-color);
+    font-size: 0.9rem;
+    margin-left: 1rem;
+    font-style: italic;
+}
+
+.delete-btn {
+    background-color: var(--danger-color);
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    transition: var(--transition);
+    font-size: 0.9rem;
+}
+
+.delete-btn:hover {
+    background-color: #c82333;
+}
+
+footer {
+    background: var(--dark-color);
+    color: white;
+    text-align: center;
+    padding: 0;
+    margin-top: auto;
+}
+
+footer p {
+    opacity: 0.8;
+}
+
+/* Empty state */
+.empty-state {
+    text-align: center;
+    padding: 3rem;
+    color: var(--secondary-color);
+}
+
+.empty-state svg {
+    width: 80px;
+    height: 80px;
+    margin-bottom: 1rem;
+    opacity: 0.3;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    header h1 {
+        font-size: 2rem;
+    }
+
+    .task-form, .task-list {
+        padding: 1.5rem;
+    }
+
+    .task-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+
+    .task-content {
+        width: 100%;
+    }
+
+    .delete-btn {
+        align-self: flex-end;
+    }
+}
+
+/* Drag and drop visual indicators */
+.task-container.drag-over {
+    background-color: rgba(74, 108, 247, 0.1);
+    border: 2px dashed var(--primary-color);
+    border-radius: var(--border-radius);
+}
+
+.task-container.drag-over .task-item {
+    opacity: 0.3;
+}
+
+.task-container.drag-over .task-item.dragging {
+    opacity: 1;
+    background-color: white;
+    border: 2px solid var(--primary-color);
+}
