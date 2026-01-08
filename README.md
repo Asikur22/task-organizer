@@ -7,7 +7,9 @@ A clean and simple web-based task organizer application with drag-and-drop funct
 - **Create Tasks**: Add tasks with optional due dates.
 - **Drag & Drop Reordering**: Intuitive drag-and-drop interface to prioritize your tasks.
 - **Date Picker**: Integrated [Flatpickr](https://flatpickr.js.org/) for a user-friendly date selection experience.
+- **Task Management**: Mark tasks as complete, edit due dates, or delete tasks with ease.
 - **Persistence**: Tasks are saved to the browser's LocalStorage, so your data persists across page reloads.
+- **Export & Import**: Save your tasks to a JSON file for backup and restore them easily.
 - **Responsive Design**: Clean UI that adapts to different screen sizes.
 
 ## Tech Stack
