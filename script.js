@@ -12,6 +12,7 @@ class TaskManager {
     init() {
         this.loadTasks();
         this.setupEventListeners();
+        this.setupImportExportListeners();
         this.initDatePicker();
         this.renderTasks();
     }
@@ -45,7 +46,80 @@ class TaskManager {
         });
     }
 
-    // ... (rest of methods)
+    setupImportExportListeners() {
+        const exportBtn = document.getElementById('exportBtn');
+        const importBtn = document.getElementById('importBtn');
+        const importFile = document.getElementById('importFile');
+
+        if (exportBtn) {
+            exportBtn.addEventListener('click', () => this.exportTasks());
+        }
+
+        if (importBtn) {
+            importBtn.addEventListener('click', () => importFile.click());
+        }
+
+        if (importFile) {
+            importFile.addEventListener('change', (e) => this.importTasks(e));
+        }
+    }
+
+    exportTasks() {
+        if (this.tasks.length === 0) {
+            alert('No tasks to export!');
+            return;
+        }
+
+        const data = JSON.stringify(this.tasks, null, 2);
+        const blob = new Blob([data], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `tasks-${new Date().toISOString().slice(0, 10)}.json`;
+        document.body.appendChild(a);
+        a.click();
+        
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+    }
+
+    importTasks(event) {
+        const file = event.target.files[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            try {
+                const importedTasks = JSON.parse(e.target.result);
+                
+                if (Array.isArray(importedTasks)) {
+                    // Simple validation: check if items look like tasks and have IDs
+                    // We could do more strict validation if needed
+                    const validTasks = importedTasks.filter(t => t.id && t.name);
+                    
+                    if (validTasks.length > 0) {
+                        this.tasks = validTasks;
+                        this.saveTasks();
+                        this.renderTasks();
+                        alert(`Successfully imported ${validTasks.length} tasks.`);
+                    } else {
+                        alert('No valid tasks found in the file.');
+                    }
+                } else {
+                    alert('Invalid file format: Expected a JSON array.');
+                }
+            } catch (err) {
+                console.error('Error parsing JSON:', err);
+                alert('Error importing tasks: Invalid JSON file.');
+            }
+            // Reset the input so the same file can be selected again if needed
+            event.target.value = '';
+        };
+        reader.readAsText(file);
+    }
+
+
 
     setupDragAndDrop() {
         const taskItems = this.taskContainer.querySelectorAll('.task-item');
@@ -76,6 +150,7 @@ class TaskManager {
             id: Date.now().toString(),
             name: name,
             date: date,
+            completed: false,
             createdAt: new Date().toISOString()
         };
 
@@ -139,8 +214,21 @@ class TaskManager {
             return;
         }
 
-        // Use current order (do not sort by date)
-        const sortedTasks = [...this.tasks];
+        // Sort tasks: Non-completed first, then Completed.
+        // Non-completed: Inherit array order (user order / LIFO default).
+        // Completed: Sort by completedAt (Descending - newest completion at top).
+        const sortedTasks = [...this.tasks].sort((a, b) => {
+            if (a.completed === b.completed) {
+                if (a.completed) {
+                    // Both completed: Sort by completedAt desc
+                    return new Date(b.completedAt) - new Date(a.completedAt);
+                }
+                // Both incomplete: Maintain original order (stable sort assumption or 0)
+                // Explicitly use index to ensure stability and respect drag-and-drop order
+                return this.tasks.indexOf(a) - this.tasks.indexOf(b);
+            }
+            return a.completed ? 1 : -1;
+        });
 
         sortedTasks.forEach(task => {
             const taskElement = this.createTaskElement(task);
@@ -155,6 +243,22 @@ class TaskManager {
         taskElement.className = 'task-item';
         taskElement.draggable = true;
         taskElement.dataset.taskId = task.id;
+        if (task.completed) {
+            taskElement.classList.add('completed');
+        }
+
+        // Completion Checkbox
+        const checkboxWrapper = document.createElement('div');
+        checkboxWrapper.className = 'checkbox-wrapper';
+        
+        const checkbox = document.createElement('input');
+        checkbox.type = 'checkbox';
+        checkbox.className = 'task-checkbox';
+        checkbox.checked = task.completed;
+        checkbox.addEventListener('change', () => this.toggleTaskCompletion(task.id));
+
+        checkboxWrapper.appendChild(checkbox);
+        taskElement.appendChild(checkboxWrapper);
 
         const taskContent = document.createElement('div');
         taskContent.className = 'task-content';
@@ -209,6 +313,20 @@ class TaskManager {
         const taskIndex = this.tasks.findIndex(t => t.id === taskId);
         if (taskIndex !== -1) {
             this.tasks[taskIndex].date = newDate;
+            this.saveTasks();
+            this.renderTasks();
+        }
+    }
+
+    toggleTaskCompletion(taskId) {
+        const taskIndex = this.tasks.findIndex(t => t.id === taskId);
+        if (taskIndex !== -1) {
+            this.tasks[taskIndex].completed = !this.tasks[taskIndex].completed;
+            if (this.tasks[taskIndex].completed) {
+                this.tasks[taskIndex].completedAt = new Date().toISOString();
+            } else {
+                this.tasks[taskIndex].completedAt = null;
+            }
             this.saveTasks();
             this.renderTasks();
         }

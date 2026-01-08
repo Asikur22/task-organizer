@@ -154,7 +154,7 @@ main {
     background: var(--light-color);
     border: 1px solid #e9ecef;
     border-radius: var(--border-radius);
-    padding: 1rem;
+    padding: .3rem 1rem;
     margin-bottom: 1rem;
     display: flex;
     justify-content: space-between;
@@ -179,7 +179,7 @@ main {
 }
 
 .task-text {
-    font-size: 1.1rem;
+    font-size: 1rem;
     font-weight: 500;
 }
 
@@ -294,4 +294,145 @@ footer p {
     opacity: 1;
     background-color: white;
     border: 2px solid var(--primary-color);
+}
+
+/* Completion Checkbox */
+.checkbox-wrapper {
+    margin-right: 1rem;
+    display: flex;
+    align-items: center;
+}
+
+.task-checkbox {
+    /* Remove default styling */
+    appearance: none;
+    -webkit-appearance: none;
+    background-color: #fff;
+    margin: 0;
+    
+    font: inherit;
+    color: currentColor;
+    width: 22px;
+    height: 22px;
+    border: 2px solid var(--secondary-color);
+    border-radius: 50%; /* Make it round */
+    display: grid;
+    place-content: center;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.task-checkbox::before {
+    content: "";
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    transform: scale(0);
+    transition: 120ms transform ease-in-out;
+    box-shadow: inset 1em 1em white;
+    background-color: white;
+}
+
+.task-checkbox:checked {
+    background-color: var(--success-color);
+    border-color: var(--success-color);
+}
+
+.task-checkbox:checked::before {
+    transform: scale(1);
+}
+
+/* Completed Task Styling */
+.task-item.completed {
+    background-color: #f8f9fa;
+    border-color: #e9ecef;
+}
+
+.task-item.completed .task-text {
+    text-decoration: line-through;
+    color: var(--secondary-color);
+    opacity: 0.7;
+}
+
+.task-item.completed .task-date {
+    opacity: 0.5;
+}
+/* File Controls */
+.header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.file-controls {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+}
+
+.btn-secondary {
+    background-color: rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    font-size: 0.9rem;
+    padding: 0.5rem 1rem;
+}
+
+.btn-secondary:hover {
+    background-color: rgba(255, 255, 255, 0.3);
+    transform: translateY(-1px);
+}
+
+.file-status {
+    font-size: 0.85rem;
+    opacity: 0.9;
+    font-style: italic;
+}
+
+@media (max-width: 600px) {
+    .header-content {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .file-controls {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+/* Task List Header */
+.task-list-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    border-bottom: 2px solid #eee;
+    padding-bottom: 0.5rem;
+}
+
+.task-list-header h2 {
+    margin-bottom: 0;
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.task-controls {
+    display: flex;
+    gap: 0.8rem;
+}
+
+.btn-secondary {
+    background-color: var(--secondary-color);
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+}
+
+.btn-secondary:hover {
+    background-color: #5a6268;
+    transform: translateY(-1px);
+    box-shadow: var(--box-shadow);
 }

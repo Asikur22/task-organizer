@@ -32,7 +32,14 @@
         </div>
 
         <div class="task-list">
-            <h2>Tasks</h2>
+            <div class="task-list-header">
+                <h2>Tasks</h2>
+                <div class="task-controls">
+                    <button id="exportBtn" class="btn btn-secondary">Export Tasks</button>
+                    <button id="importBtn" class="btn btn-secondary">Import Tasks</button>
+                    <input type="file" id="importFile" accept=".json" style="display: none;">
+                </div>
+            </div>
             <div id="taskContainer" class="task-container">
                 <!-- Tasks will be dynamically added here -->
             </div>
